@@ -1,8 +1,11 @@
 import {AppProps} from "next/app";
 import Head from "next/head";
-import React from "react";
+import React, {useState} from "react";
+import {AccessTokenContext} from "../hooks/useAccessToken";
 
 function MyApp({ Component, pageProps }: AppProps) {
+
+    const [accessToken, setAccessToken] = useState<string>('');
     return (
         <React.Fragment>
             <Head>
@@ -11,7 +14,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet" />
                 <title>Watchify</title>
             </Head>
-            <Component {...pageProps} />
+            <AccessTokenContext.Provider value={{accessToken: accessToken, setAccessToken: (token: string) => setAccessToken(token)}}>
+                <Component {...pageProps} />
+            </AccessTokenContext.Provider>
         </React.Fragment>
     );
 }

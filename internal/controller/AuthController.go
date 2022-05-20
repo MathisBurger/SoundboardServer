@@ -27,11 +27,7 @@ func AuthController(ctx *fiber.Ctx) error {
 	err := json.Unmarshal(ctx.Body(), &obj)
 
 	if err != nil {
-		return ctx.JSON(loginResponse{
-			false,
-			"Invalid JSON body",
-			"None",
-		})
+		return ctx.SendStatus(400)
 	}
 	if obj.Password == os.Getenv("ADMIN_PASSWORD") {
 		manager, err := accessToken.NewJWTManager("./certs/private.pem", "")
@@ -48,10 +44,6 @@ func AuthController(ctx *fiber.Ctx) error {
 			token,
 		})
 	} else {
-		return ctx.JSON(loginResponse{
-			false,
-			"Invalid credentials",
-			"None",
-		})
+		return ctx.SendStatus(401)
 	}
 }

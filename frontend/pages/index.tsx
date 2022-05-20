@@ -1,8 +1,13 @@
 import type {NextPage} from "next";
+import AuthorizationWrapper from "../components/AuthorizationWrapper";
 
 const Dashboard: NextPage = () => {
 
-    return <div />;
+    return (
+        <AuthorizationWrapper>
+            <div />
+        </AuthorizationWrapper>
+    )
 }
 
 export default Dashboard;
