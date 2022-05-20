@@ -2,13 +2,11 @@ package websocket
 
 import (
 	accessToken2 "SoundboardServer/internal/accessToken"
-	"fmt"
 	"github.com/gofiber/websocket/v2"
 )
 
 func AuthorizeInWebSocket(conn *websocket.Conn) bool {
-	req := WebsocketRequest{}
-	err := conn.ReadJSON(req)
+	_, msg, err := conn.ReadMessage()
 	if err != nil {
 		conn.WriteJSON(WebsocketRequest{
 			"Auth",
@@ -18,10 +16,9 @@ func AuthorizeInWebSocket(conn *websocket.Conn) bool {
 	}
 	atvalidator, _ := accessToken2.NewJWTManager("", "./certs/public.pem")
 
-	accessToken := fmt.Sprint(req.Content)
+	accessToken := string(msg)
 	_, err = atvalidator.Validate(accessToken)
 	if err != nil {
-		fmt.Println(err.Error())
 		return false
 	}
 	return true
