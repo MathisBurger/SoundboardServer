@@ -18,24 +18,30 @@ func PlaySoundController(ctx *fiber.Ctx) error {
 	if !middleware.ValidateAuth(ctx) {
 		return ctx.SendStatus(401)
 	}
-	cmd := exec.Command("./Player", "./sounds/"+ctx.Query("soundName", ""))
+	soundName := ctx.Query("soundName", "")
+	cmd := exec.Command("./Player", "./sounds/"+soundName)
 	err := cmd.Start()
 	if err != nil {
 		return ctx.SendString(err.Error())
 	}
+	process := storage.PlayerProcess{
+		PlayerId:  cmd.Process.Pid,
+		SoundName: soundName,
+	}
+	storage.CurrentPlayerPids = append(storage.CurrentPlayerPids, process)
 	go func() {
 		err := cmd.Wait()
+		StopSound(process)
 		if err == nil {
 			for _, conn := range storage.AuthorizedConnections {
 				conn.WriteJSON(websocketUpdatedPlaying{
 					Action:      "UpdatePlaying",
-					UpdatedName: ctx.Query("soundName", ""),
+					UpdatedName: soundName,
 					Started:     false,
 				})
 			}
 		}
 	}()
-	storage.CurrentPlayerPid = cmd.Process.Pid
 	if err == nil {
 		for _, conn := range storage.AuthorizedConnections {
 			conn.WriteJSON(websocketUpdatedPlaying{

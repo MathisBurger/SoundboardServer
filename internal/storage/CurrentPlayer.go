@@ -2,5 +2,10 @@ package storage
 
 import "github.com/gofiber/websocket/v2"
 
-var CurrentPlayerPid int
+type PlayerProcess struct {
+	PlayerId  int
+	SoundName string
+}
+
+var CurrentPlayerPids []PlayerProcess
 var AuthorizedConnections []*websocket.Conn
