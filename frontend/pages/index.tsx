@@ -27,10 +27,10 @@ const Dashboard: NextPage = () => {
     useEffect(() => {
         const asyncLoader = async () => {
             let sock = new w3cwebsocket("ws://localhost:8080/ws");
+            sock.onmessage = messageHandler;
             setTimeout(() => {
                 sock.send(accessToken.accessToken);
             }, 250);
-            sock.onmessage = messageHandler;
         };
         asyncLoader();
         fetch(`${ORIGIN}/api/sounds`, {
@@ -73,6 +73,7 @@ const Dashboard: NextPage = () => {
 
     const messageHandler = (message: IMessageEvent) => {
         const data = JSON.parse(message.data as string) as WebsocketUpdateMessage;
+        //console.log(data);
         if (data.action === 'UpdatePlaying') {
             if (data.started) {
                 setCurrentPlaying([...currentPlaying, data.updatedName]);

@@ -1,13 +1,24 @@
 import {AppProps} from "next/app";
 import Head from "next/head";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {AccessTokenContext} from "../hooks/useAccessToken";
 import {CurrentPlayingContext} from "../hooks/useCurrentPlaying";
+import {ORIGIN} from "../constants";
 
 function MyApp({ Component, pageProps }: AppProps) {
 
     const [accessToken, setAccessToken] = useState<string>('');
     const [currentPlaying, setCurrentPlaying] = useState<string[]>([]);
+
+    useEffect(() => {
+        fetch(`${ORIGIN}/api/currentPlaying`, {
+            headers: {
+                Authorization: `accessToken ${accessToken}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => setCurrentPlaying(data.sounds));
+    }, []);
     return (
         <React.Fragment>
             <Head>

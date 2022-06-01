@@ -52,6 +52,7 @@ func main() {
 	app.Get("/api/player/stopSound", controller.StopSoundController)
 	app.Get("/ws", websocket.New(controller.WebSocketController))
 	app.Get("/api/sounds", controller.SoundsController)
+	app.Get("/api/currentPlaying", controller.CurrentPlayingController)
 	app.Get("/api/check_login", controller.CheckLoginController)
 
 	err := app.Listen(":8080")
