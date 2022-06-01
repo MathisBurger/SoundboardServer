@@ -54,6 +54,7 @@ func main() {
 	app.Get("/api/sounds", controller.SoundsController)
 	app.Get("/api/currentPlaying", controller.CurrentPlayingController)
 	app.Get("/api/check_login", controller.CheckLoginController)
+	app.Post("/api/addSound", controller.AddSoundController)
 
 	err := app.Listen(":8080")
 	if err != nil {

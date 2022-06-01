@@ -1,11 +1,12 @@
 import type {NextPage} from "next";
 import AuthorizationWrapper from "../components/AuthorizationWrapper";
 import {IMessageEvent, w3cwebsocket} from "websocket";
-import {useCallback, useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import useAccessToken from "../hooks/useAccessToken";
 import {ORIGIN} from "../constants";
 import {Button, Card, CardContent, Grid, Typography} from "@mui/material";
 import useCurrentPlaying from "../hooks/useCurrentPlaying";
+import AddSoundDialog from "../components/AddSoundDialog";
 
 interface WebsocketUpdateMessage {
     action: string;
@@ -23,6 +24,17 @@ const Dashboard: NextPage = () => {
     const accessToken = useAccessToken();
     const [sounds, setSounds] = useState<string[]>([]);
     const {currentPlaying, setCurrentPlaying} = useCurrentPlaying();
+    const [soundDialogOpen, setSoundDialogOpen] = useState<boolean>(false);
+
+    const fetchSounds = () => {
+        fetch(`${ORIGIN}/api/sounds`, {
+            headers: {
+                Authorization: `accessToken ${accessToken.accessToken}`
+            }
+        })
+            .then(res => res.json())
+            .then(data => setSounds(data.sounds));
+    };
 
     useEffect(() => {
         const asyncLoader = async () => {
@@ -33,13 +45,7 @@ const Dashboard: NextPage = () => {
             }, 250);
         };
         asyncLoader();
-        fetch(`${ORIGIN}/api/sounds`, {
-            headers: {
-                Authorization: `accessToken ${accessToken.accessToken}`
-            }
-        })
-            .then(res => res.json())
-            .then(data => setSounds(data.sounds));
+        fetchSounds();
     }, [accessToken]);
 
     const playSound = async (name: string) => {
@@ -94,6 +100,9 @@ const Dashboard: NextPage = () => {
     return (
         <AuthorizationWrapper>
             <Grid container direction="row" spacing={2} justifyContent="flex-end">
+                <Button onClick={() => setSoundDialogOpen(true)} variant="contained" color="primary" style={{margin: '10px', padding: '10px'}}>
+                    Add Sound
+                </Button>
                 <Button onClick={stopAll} variant="contained" color="primary" style={{margin: '10px', padding: '10px'}}>
                     Stop All
                 </Button>
@@ -115,6 +124,11 @@ const Dashboard: NextPage = () => {
                     </Grid>
                 ))}
             </Grid>
+            <AddSoundDialog
+                open={soundDialogOpen}
+                onClose={() => setSoundDialogOpen(false)}
+                refreshSoundList={fetchSounds}
+            />
         </AuthorizationWrapper>
     )
 }
