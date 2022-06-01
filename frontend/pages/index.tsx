@@ -4,7 +4,7 @@ import {IMessageEvent, w3cwebsocket} from "websocket";
 import {useCallback, useEffect, useMemo, useState} from "react";
 import useAccessToken from "../hooks/useAccessToken";
 import {ORIGIN} from "../constants";
-import {Card, CardContent, Grid, Typography} from "@mui/material";
+import {Button, Card, CardContent, Grid, Typography} from "@mui/material";
 import useCurrentPlaying from "../hooks/useCurrentPlaying";
 
 interface WebsocketUpdateMessage {
@@ -93,6 +93,11 @@ const Dashboard: NextPage = () => {
 
     return (
         <AuthorizationWrapper>
+            <Grid container direction="row" spacing={2} justifyContent="flex-end">
+                <Button onClick={stopAll} variant="contained" color="primary" style={{margin: '10px', padding: '10px'}}>
+                    Stop All
+                </Button>
+            </Grid>
             <Grid container direction="row" spacing={2}>
                 {preparedSounds.map((sound, key) => (
                     <Grid item xs={2} key={key}>
