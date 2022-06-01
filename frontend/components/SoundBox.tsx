@@ -5,12 +5,28 @@ import useAccessToken from "../hooks/useAccessToken";
 import {ORIGIN} from "../constants";
 
 interface SoundBoxProps {
+    /**
+     * The sound that should be displayed
+     */
     sound: PreparedSound;
+    /**
+     * If the delete mode is enabled
+     */
     deleteMode: boolean;
+    /**
+     * All currently playing sounds
+     */
     currentPlaying: string[];
+    /**
+     * Is called if the sound list should be refreshed
+     */
     refreshSoundList: () => void;
 }
 
+/**
+ * Displays a sound and handles play and stop actions.
+ * Furthermore, it handles if a sound can be deleted or not
+ */
 const SoundBox: React.FC<SoundBoxProps> = ({sound, deleteMode, currentPlaying, refreshSoundList}) => {
 
     const accessToken = useAccessToken();

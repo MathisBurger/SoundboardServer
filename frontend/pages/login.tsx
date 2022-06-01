@@ -1,7 +1,6 @@
 import type {NextPage} from "next";
 import {Button, Card, CardContent, TextField} from "@mui/material";
 import {CSSProperties, useState} from "react";
-import {log} from "util";
 import {ORIGIN} from "../constants";
 import useAccessToken from "../hooks/useAccessToken";
 import {useRouter} from "next/router";

@@ -10,13 +10,28 @@ import AddSoundDialog from "../components/AddSoundDialog";
 import SoundBox from "../components/SoundBox";
 
 interface WebsocketUpdateMessage {
+    /**
+     * The action that is provided by the websocket
+     */
     action: string;
+    /**
+     * The name of the sound that has been changed
+     */
     updatedName: string;
+    /**
+     * If the sound has started or not
+     */
     started: boolean;
 }
 
 export interface PreparedSound {
+    /**
+     * The name of the sound
+     */
     name: string;
+    /**
+     * If the sound is currently playing
+     */
     currentPlaying: boolean;
 }
 

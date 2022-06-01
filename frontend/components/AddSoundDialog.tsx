@@ -4,11 +4,23 @@ import {ORIGIN} from "../constants";
 import useAccessToken from "../hooks/useAccessToken";
 
 interface AddSoundDialogProps {
+    /**
+     * If the dialog is opened
+     */
     open: boolean;
+    /**
+     * Is excuted to close the dialog
+     */
     onClose: () => void;
+    /**
+     * Is called if the sound list should be updated
+     */
     refreshSoundList: () => void;
 }
 
+/**
+ * Provides the possibility to add a new sound to the soundboard.
+ */
 const AddSoundDialog: React.FC<AddSoundDialogProps> = ({open, onClose, refreshSoundList}) => {
 
     const [files, setFiles] = useState([]);
