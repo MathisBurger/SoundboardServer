@@ -7,6 +7,8 @@ import (
 	"os"
 )
 
+// RemoveSoundController removes the sound provided
+// in the query from the soundboard
 func RemoveSoundController(ctx *fiber.Ctx) error {
 
 	if !middleware.ValidateAuth(ctx) {

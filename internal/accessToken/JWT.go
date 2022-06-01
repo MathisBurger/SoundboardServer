@@ -10,14 +10,14 @@ import (
 
 var signMethod = jwt.SigningMethodRS256
 
-// This implements the RSA keypair
+// JWTKeyPair This implements the RSA keypair
 // needed to sign JWT
 type JWTKeyPair struct {
 	privateKey *rsa.PrivateKey
 	publicKey  *rsa.PublicKey
 }
 
-// this functions generates a new Keypair for JWT signing
+// NewJWTManager this functions generates a new Keypair for JWT signing
 func NewJWTManager(privateKeyFile, publicKeyFile string) (m *JWTKeyPair, err error) {
 	m = new(JWTKeyPair)
 
@@ -47,6 +47,7 @@ func NewJWTManager(privateKeyFile, publicKeyFile string) (m *JWTKeyPair, err err
 	return
 }
 
+// Generates a new key-pair
 func (m *JWTKeyPair) Generate(ident string, expire time.Duration) (token string, err error) {
 	if m.privateKey == nil {
 		err = errors.New("not supported with this instance")
@@ -63,6 +64,8 @@ func (m *JWTKeyPair) Generate(ident string, expire time.Duration) (token string,
 	return
 }
 
+// Validate validates the provided token and returns the ident that
+// was written into the JWT
 func (m *JWTKeyPair) Validate(token string) (ident string, err error) {
 	if m.publicKey == nil {
 		err = errors.New("not supported with this instance")

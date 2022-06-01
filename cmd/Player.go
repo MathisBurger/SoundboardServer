@@ -11,6 +11,7 @@ import (
 	"time"
 )
 
+/// gets the mp3 or wave stream from the filename
 func getStream(fileName string) (beep.StreamSeekCloser, beep.Format, error) {
 	f, err := os.Open(fileName)
 	if err != nil {
@@ -24,6 +25,7 @@ func getStream(fileName string) (beep.StreamSeekCloser, beep.Format, error) {
 	return nil, beep.Format{}, nil
 }
 
+/// plays the sound that is provided by the os flags
 func main() {
 	streamer, format, err := getStream(os.Args[1])
 	if err != nil {

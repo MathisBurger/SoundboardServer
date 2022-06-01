@@ -6,6 +6,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// AddSoundController handles all requests
+// that are adding a new sound to the soundboard
 func AddSoundController(ctx *fiber.Ctx) error {
 
 	if !middleware.ValidateAuth(ctx) {

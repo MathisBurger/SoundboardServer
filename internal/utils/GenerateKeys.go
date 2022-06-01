@@ -9,6 +9,7 @@ import (
 	"os"
 )
 
+// GenerateKeys generates the JWT keys
 func GenerateKeys() {
 	if _, err := os.Stat("./certs/private.pem"); os.IsNotExist(err) {
 		privKey, _ := rsa.GenerateKey(rand.Reader, 2048)

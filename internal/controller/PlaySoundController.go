@@ -13,6 +13,8 @@ type websocketUpdatedPlaying struct {
 	Started     bool   `json:"started"`
 }
 
+// PlaySoundController plays the sound with the provided filename
+// and sends the player change to the websocket
 func PlaySoundController(ctx *fiber.Ctx) error {
 
 	if !middleware.ValidateAuth(ctx) {

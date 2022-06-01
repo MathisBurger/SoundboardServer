@@ -7,11 +7,15 @@ import (
 	"os"
 )
 
+// removes the process with a specific index
+// from the given slice
 func removeProcess(slice []storage.PlayerProcess, i int) []storage.PlayerProcess {
 	copy(slice[i:], slice[i+1:])
 	return slice[:len(slice)-1]
 }
 
+// finds the index of a specific sound
+// that is currently played
 func findIndex(slice []storage.PlayerProcess, soundName string) int {
 	for i, p := range slice {
 		if p.SoundName == soundName {
@@ -21,6 +25,8 @@ func findIndex(slice []storage.PlayerProcess, soundName string) int {
 	return -1
 }
 
+// StopSound stops the sound that is played by
+// by the provided process
 func StopSound(process storage.PlayerProcess) {
 	p := &os.Process{
 		Pid: process.PlayerId,
@@ -42,6 +48,8 @@ func StopSound(process storage.PlayerProcess) {
 	}
 }
 
+// StopSoundController stops the sound with the provided
+// soundName. If the soundName is empty, all sounds are stopped
 func StopSoundController(ctx *fiber.Ctx) error {
 
 	if !middleware.ValidateAuth(ctx) {

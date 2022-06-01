@@ -10,6 +10,8 @@ type response struct {
 	Sounds []string `json:"sounds"`
 }
 
+// CurrentPlayingController gets all sounds
+// that are currently played by the soundboard
 func CurrentPlayingController(ctx *fiber.Ctx) error {
 
 	if !middleware.ValidateAuth(ctx) {

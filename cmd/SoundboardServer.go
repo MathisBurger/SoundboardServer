@@ -24,6 +24,8 @@ func main() {
 		ExposeHeaders:    "Authorization",
 	}))
 
+	/// Enables the rate limiter if it is provided
+	/// by the environment variables
 	if os.Getenv("RATE_LIMITER") == "enabled" {
 		app.Use(limiter.New(limiter.Config{
 			Next: func(c *fiber.Ctx) bool {

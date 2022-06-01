@@ -7,6 +7,8 @@ import (
 	"strings"
 )
 
+// ValidateAuth validates if the request
+// contains a JWT that is valid in this environment
 func ValidateAuth(ctx *fiber.Ctx) bool {
 	atvalidator, _ := accessToken2.NewJWTManager("", "./certs/public.pem")
 

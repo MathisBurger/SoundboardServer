@@ -10,6 +10,8 @@ type soundsResponse struct {
 	Sounds []string `json:"sounds"`
 }
 
+// SoundsController gets all sounds that can
+// be played via the soundboard
 func SoundsController(ctx *fiber.Ctx) error {
 
 	if !middleware.ValidateAuth(ctx) {

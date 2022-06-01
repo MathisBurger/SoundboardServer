@@ -20,6 +20,8 @@ type loginResponse struct {
 
 const accessTokenLifetime = 1 * time.Hour
 
+// AuthController handles the login
+// requests to the server.
 func AuthController(ctx *fiber.Ctx) error {
 
 	// parsing and checking request

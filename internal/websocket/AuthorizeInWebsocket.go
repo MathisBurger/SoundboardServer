@@ -5,6 +5,8 @@ import (
 	"github.com/gofiber/websocket/v2"
 )
 
+// AuthorizeInWebSocket validates if the connected websocket is
+// authorized
 func AuthorizeInWebSocket(conn *websocket.Conn) bool {
 	_, msg, err := conn.ReadMessage()
 	if err != nil {
