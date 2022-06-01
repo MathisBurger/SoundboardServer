@@ -4,9 +4,10 @@ import {IMessageEvent, w3cwebsocket} from "websocket";
 import {useEffect, useMemo, useState} from "react";
 import useAccessToken from "../hooks/useAccessToken";
 import {ORIGIN} from "../constants";
-import {Button, Card, CardContent, Grid, Typography} from "@mui/material";
+import {Button, Grid, Typography} from "@mui/material";
 import useCurrentPlaying from "../hooks/useCurrentPlaying";
 import AddSoundDialog from "../components/AddSoundDialog";
+import SoundBox from "../components/SoundBox";
 
 interface WebsocketUpdateMessage {
     action: string;
@@ -14,7 +15,7 @@ interface WebsocketUpdateMessage {
     started: boolean;
 }
 
-interface PreparedSound {
+export interface PreparedSound {
     name: string;
     currentPlaying: boolean;
 }
@@ -25,6 +26,7 @@ const Dashboard: NextPage = () => {
     const [sounds, setSounds] = useState<string[]>([]);
     const {currentPlaying, setCurrentPlaying} = useCurrentPlaying();
     const [soundDialogOpen, setSoundDialogOpen] = useState<boolean>(false);
+    const [deleteMode, setDeleteMode] = useState<boolean>(false);
 
     const fetchSounds = () => {
         fetch(`${ORIGIN}/api/sounds`, {
@@ -47,27 +49,6 @@ const Dashboard: NextPage = () => {
         asyncLoader();
         fetchSounds();
     }, [accessToken]);
-
-    const playSound = async (name: string) => {
-        if (currentPlaying.indexOf(name) > -1) {
-            return;
-        }
-        await fetch(`${ORIGIN}/api/player/playSound?soundName=${name}`, {
-            headers: {
-                Authorization: `accessToken ${accessToken.accessToken}`
-            }
-        });
-    }
-
-    const stopSound = async (name: string) => {
-        if (currentPlaying.indexOf(name) > -1) {
-            await fetch(`${ORIGIN}/api/player/stopSound?soundName=${name}`, {
-                headers: {
-                    Authorization: `accessToken ${accessToken.accessToken}`
-                }
-            });
-        }
-    }
 
     const stopAll = async () => {
         await fetch(`${ORIGIN}/api/player/stopSound`, {
@@ -100,6 +81,14 @@ const Dashboard: NextPage = () => {
     return (
         <AuthorizationWrapper>
             <Grid container direction="row" spacing={2} justifyContent="flex-end">
+                <Button
+                    onClick={() => setDeleteMode(!deleteMode)}
+                    variant="contained"
+                    color="primary"
+                    style={{margin: '10px', padding: '10px'}}
+                >
+                    toggle delete mode
+                </Button>
                 <Button onClick={() => setSoundDialogOpen(true)} variant="contained" color="primary" style={{margin: '10px', padding: '10px'}}>
                     Add Sound
                 </Button>
@@ -109,19 +98,12 @@ const Dashboard: NextPage = () => {
             </Grid>
             <Grid container direction="row" spacing={2}>
                 {preparedSounds.map((sound, key) => (
-                    <Grid item xs={2} key={key}>
-                        <Card onClick={() => {
-                            if (sound.currentPlaying) {
-                                stopSound(sound.name);
-                            } else {
-                                playSound(sound.name);
-                            }
-                        }}>
-                            <CardContent style={{background: sound.currentPlaying ? 'red' : '#999999', textAlign: 'center'}}>
-                                <Typography variant="h3" color="#fff">{sound.name}</Typography>
-                            </CardContent>
-                        </Card>
-                    </Grid>
+                    <SoundBox
+                        sound={sound}
+                        deleteMode={deleteMode}
+                        currentPlaying={currentPlaying}
+                        refreshSoundList={fetchSounds}
+                    />
                 ))}
             </Grid>
             <AddSoundDialog
