@@ -2,10 +2,12 @@ import {AppProps} from "next/app";
 import Head from "next/head";
 import React, {useState} from "react";
 import {AccessTokenContext} from "../hooks/useAccessToken";
+import {CurrentPlayingContext} from "../hooks/useCurrentPlaying";
 
 function MyApp({ Component, pageProps }: AppProps) {
 
     const [accessToken, setAccessToken] = useState<string>('');
+    const [currentPlaying, setCurrentPlaying] = useState<string[]>([]);
     return (
         <React.Fragment>
             <Head>
@@ -15,7 +17,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <title>Watchify</title>
             </Head>
             <AccessTokenContext.Provider value={{accessToken: accessToken, setAccessToken: (token: string) => setAccessToken(token)}}>
-                <Component {...pageProps} />
+                <CurrentPlayingContext.Provider value={{currentPlaying, setCurrentPlaying}}>
+                    <Component {...pageProps} />
+                </CurrentPlayingContext.Provider>
             </AccessTokenContext.Provider>
         </React.Fragment>
     );

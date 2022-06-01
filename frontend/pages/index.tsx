@@ -1,10 +1,11 @@
 import type {NextPage} from "next";
 import AuthorizationWrapper from "../components/AuthorizationWrapper";
 import {IMessageEvent, w3cwebsocket} from "websocket";
-import {useEffect, useMemo, useState} from "react";
+import {useCallback, useEffect, useMemo, useState} from "react";
 import useAccessToken from "../hooks/useAccessToken";
 import {ORIGIN} from "../constants";
 import {Card, CardContent, Grid, Typography} from "@mui/material";
+import useCurrentPlaying from "../hooks/useCurrentPlaying";
 
 interface WebsocketUpdateMessage {
     action: string;
@@ -21,7 +22,7 @@ const Dashboard: NextPage = () => {
 
     const accessToken = useAccessToken();
     const [sounds, setSounds] = useState<string[]>([]);
-    const [playingSounds, setPlayingSounds] = useState<string[]>([]);
+    const {currentPlaying, setCurrentPlaying} = useCurrentPlaying();
 
     useEffect(() => {
         const asyncLoader = async () => {
@@ -42,7 +43,7 @@ const Dashboard: NextPage = () => {
     }, [accessToken]);
 
     const playSound = async (name: string) => {
-        if (playingSounds.indexOf(name) > -1) {
+        if (currentPlaying.indexOf(name) > -1) {
             return;
         }
         await fetch(`${ORIGIN}/api/player/playSound?soundName=${name}`, {
@@ -53,7 +54,7 @@ const Dashboard: NextPage = () => {
     }
 
     const stopSound = async (name: string) => {
-        if (playingSounds.indexOf(name) > -1) {
+        if (currentPlaying.indexOf(name) > -1) {
             await fetch(`${ORIGIN}/api/player/stopSound?soundName=${name}`, {
                 headers: {
                     Authorization: `accessToken ${accessToken.accessToken}`
@@ -72,16 +73,11 @@ const Dashboard: NextPage = () => {
 
     const messageHandler = (message: IMessageEvent) => {
         const data = JSON.parse(message.data as string) as WebsocketUpdateMessage;
-        //console.log(data);
-        if (data.action === "UpdatePlaying") {
+        if (data.action === 'UpdatePlaying') {
             if (data.started) {
-                console.log(playingSounds);
-                const fix = [...playingSounds, data.updatedName];
-                console.log(fix)
-                setPlayingSounds(fix);
+                setCurrentPlaying([...currentPlaying, data.updatedName]);
             } else {
-                const filtered = playingSounds.filter(sound => data.updatedName !== sound);
-                setPlayingSounds(filtered);
+                setCurrentPlaying(currentPlaying.filter(name => name !== data.updatedName));
             }
         }
     }
@@ -89,9 +85,9 @@ const Dashboard: NextPage = () => {
     const preparedSounds = useMemo<PreparedSound[]>(
         () => sounds.map((sound) => ({
             name: sound,
-            currentPlaying: playingSounds.indexOf(sound) > -1
+            currentPlaying: currentPlaying.indexOf(sound) > -1
         })),
-        [sounds, playingSounds]
+        [sounds, currentPlaying]
     );
 
     return (
