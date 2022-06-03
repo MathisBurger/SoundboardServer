@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <link rel="preconnect" href="https://fonts.googleapis.com" />
                 <link rel="preconnect" href="https://fonts.gstatic.com" />
                 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet" />
-                <title>Watchify</title>
+                <title>SoundboardServer</title>
             </Head>
             <AccessTokenContext.Provider value={{accessToken: accessToken, setAccessToken: (token: string) => setAccessToken(token)}}>
                 <CurrentPlayingContext.Provider value={{currentPlaying, setCurrentPlaying}}>

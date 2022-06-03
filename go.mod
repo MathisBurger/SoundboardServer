@@ -3,12 +3,15 @@ module SoundboardServer
 go 1.18
 
 require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/faiface/beep v1.1.0
+	github.com/gofiber/fiber/v2 v2.33.0
+	github.com/gofiber/websocket/v2 v2.0.21
+)
+
+require (
 	github.com/andybalholm/brotli v1.0.4 // indirect
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
-	github.com/faiface/beep v1.1.0 // indirect
 	github.com/fasthttp/websocket v1.5.0 // indirect
-	github.com/gofiber/fiber/v2 v2.33.0 // indirect
-	github.com/gofiber/websocket/v2 v2.0.21 // indirect
 	github.com/hajimehoshi/go-mp3 v0.3.0 // indirect
 	github.com/hajimehoshi/oto v0.7.1 // indirect
 	github.com/klauspost/compress v1.15.4 // indirect
