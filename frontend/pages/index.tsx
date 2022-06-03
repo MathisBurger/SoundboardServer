@@ -118,6 +118,7 @@ const Dashboard: NextPage = () => {
                         deleteMode={deleteMode}
                         currentPlaying={currentPlaying}
                         refreshSoundList={fetchSounds}
+                        key={key}
                     />
                 ))}
             </Grid>

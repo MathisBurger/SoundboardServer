@@ -49,6 +49,10 @@ func main() {
 		return fiber.ErrUpgradeRequired
 	})
 
+	app.Get("/", func(ctx *fiber.Ctx) error {
+		return ctx.Redirect("/index.html")
+	})
+
 	app.Post("/api/auth/login", controller.AuthController)
 	app.Get("/api/player/playSound", controller.PlaySoundController)
 	app.Get("/api/player/stopSound", controller.StopSoundController)
@@ -58,6 +62,7 @@ func main() {
 	app.Get("/api/check_login", controller.CheckLoginController)
 	app.Post("/api/addSound", controller.AddSoundController)
 	app.Delete("/api/removeSound", controller.RemoveSoundController)
+	app.Get("/**", controller.WebAssetController)
 
 	err := app.Listen(":8080")
 	if err != nil {
